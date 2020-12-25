@@ -74,7 +74,7 @@ class AbstractFactory
 {
 public:
     ~AbstractFactory() = default;
-    virtual AbstractBallProduct * getProduct() = 0;
+    virtual AbstractBallProduct * createProduct() = 0;
 protected:
     AbstractFactory() = default;
 };
@@ -86,7 +86,7 @@ class BasketballFactory : public AbstractFactory
 public:
     BasketballFactory() = default;
     ~BasketballFactory() = default;
-    AbstractBallProduct *getProduct() override{
+    AbstractBallProduct *createProduct() override{
         return  new Basketball();
     }
 };
@@ -97,7 +97,7 @@ class FootballFactory : public AbstractFactory
 public:
     FootballFactory() = default;
     ~FootballFactory() = default;
-    AbstractBallProduct *getProduct() override{
+    AbstractBallProduct *createProduct() override{
         return  new Football();
     }
 };
@@ -107,7 +107,7 @@ class VolleyballFactory : public AbstractFactory
 public:
     VolleyballFactory() = default;
     ~VolleyballFactory() = default;
-    AbstractBallProduct *getProduct() override{
+    AbstractBallProduct *createProduct() override{
         return  new Volleyball();
     }
 };
