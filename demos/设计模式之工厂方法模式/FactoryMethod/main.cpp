@@ -9,16 +9,23 @@ int main() {
     AbstractFactory *factory = nullptr;
 
     factory = new BasketballFactory();
-    product = factory->getProduct();
+    product = factory->createProduct();
     product->productName();
+    delete factory;
+    delete product;
+
 
     factory = new FootballFactory();
-    product = factory->getProduct();
+    product = factory->createProduct();
     product->productIntroduction();
+    delete factory;
+    delete product;
 
     factory = new VolleyballFactory();
-    product = factory->getProduct();
+    product = factory->createProduct();
     product->productIntroduction();
+    delete factory;
+    delete product;
 
     getchar();
     return 0;

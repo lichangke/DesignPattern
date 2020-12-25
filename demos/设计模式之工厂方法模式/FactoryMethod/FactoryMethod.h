@@ -11,7 +11,7 @@
 class AbstractBallProduct
 {
 public:
-    ~AbstractBallProduct() = default;
+    virtual ~AbstractBallProduct() = default;
     //抽象方法：
     virtual void productName() = 0;
     virtual void productIntroduction() = 0;
@@ -26,7 +26,7 @@ class Basketball :public AbstractBallProduct
 {
 public:
     Basketball() = default;
-    ~Basketball() {
+    ~Basketball() override {
         std::cout << "Basketball Bye" << std::endl;
     };
     void productName() override{
@@ -42,7 +42,7 @@ class Football :public AbstractBallProduct
 {
 public:
     Football() = default;
-    ~Football() {
+    ~Football() override {
         std::cout << "Football Bye" << std::endl;
     };
     void productName() override{
@@ -58,7 +58,7 @@ class Volleyball :public AbstractBallProduct
 {
 public:
     Volleyball() = default;
-    ~Volleyball() {
+    ~Volleyball() override {
         std::cout << "Volleyball Bye" << std::endl;
     };
     void productName() override{
@@ -73,7 +73,7 @@ public:
 class AbstractFactory
 {
 public:
-    ~AbstractFactory() = default;
+    virtual ~AbstractFactory() = default;
     virtual AbstractBallProduct * createProduct() = 0;
 protected:
     AbstractFactory() = default;
@@ -85,7 +85,9 @@ class BasketballFactory : public AbstractFactory
 {
 public:
     BasketballFactory() = default;
-    ~BasketballFactory() = default;
+    ~BasketballFactory() override {
+        std::cout << "BasketballFactory Bye" << std::endl;
+    };
     AbstractBallProduct *createProduct() override{
         return  new Basketball();
     }
@@ -96,7 +98,9 @@ class FootballFactory : public AbstractFactory
 {
 public:
     FootballFactory() = default;
-    ~FootballFactory() = default;
+    ~FootballFactory() override {
+        std::cout << "FootballFactory Bye" << std::endl;
+    };
     AbstractBallProduct *createProduct() override{
         return  new Football();
     }
@@ -106,7 +110,9 @@ class VolleyballFactory : public AbstractFactory
 {
 public:
     VolleyballFactory() = default;
-    ~VolleyballFactory() = default;
+    ~VolleyballFactory() override {
+        std::cout << "VolleyballFactory Bye" << std::endl;
+    };
     AbstractBallProduct *createProduct() override{
         return  new Volleyball();
     }

@@ -11,7 +11,7 @@
 class AbstractBallProduct
 {
 public:
-    ~AbstractBallProduct() = default;
+    virtual ~AbstractBallProduct() = default;
     //抽象方法：
     virtual void productName() = 0;
     virtual void productIntroduction() = 0;
@@ -26,7 +26,7 @@ class Basketball :public AbstractBallProduct
 {
 public:
     Basketball() = default;
-    ~Basketball() {
+    ~Basketball() override {
         std::cout << "Basketball Bye" << std::endl;
     };
     void productName() override{
@@ -42,7 +42,7 @@ class Football :public AbstractBallProduct
 {
 public:
     Football() = default;
-    ~Football() {
+    ~Football() override {
         std::cout << "Football Bye" << std::endl;
     };
     void productName() override{
@@ -58,7 +58,7 @@ class Volleyball :public AbstractBallProduct
 {
 public:
     Volleyball() = default;
-    ~Volleyball() {
+    ~Volleyball() override {
         std::cout << "Volleyball Bye" << std::endl;
     };
     void productName() override{

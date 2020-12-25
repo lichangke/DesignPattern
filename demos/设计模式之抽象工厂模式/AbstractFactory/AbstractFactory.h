@@ -11,7 +11,7 @@
 class AbstractPhoneProduct
 {
 public:
-    ~AbstractPhoneProduct() = default;
+    virtual ~AbstractPhoneProduct() = default;
     //抽象方法：
     virtual void productName() = 0;
     virtual void productIntroduction() = 0;
@@ -26,7 +26,7 @@ class HWPhone :public AbstractPhoneProduct
 {
 public:
     HWPhone() = default;
-    ~HWPhone() {
+    ~HWPhone() override {
         std::cout << "HWPhone Bye" << std::endl;
     };
     void productName() override{
@@ -42,7 +42,7 @@ class MIPhone :public AbstractPhoneProduct
 {
 public:
     MIPhone() = default;
-    ~MIPhone() {
+    ~MIPhone() override {
         std::cout << "MIPhone Bye" << std::endl;
     };
     void productName() override{
@@ -58,7 +58,7 @@ public:
 class AbstractTVProduct
 {
 public:
-    ~AbstractTVProduct() = default;
+    virtual ~AbstractTVProduct() = default;
     //抽象方法：
     virtual void productName() = 0;
     virtual void productIntroduction() = 0;
@@ -67,13 +67,15 @@ protected:
 
 };
 
+
+
 ///2个具体产品类
 ///具体产品类 HWTV
 class HWTV :public AbstractTVProduct
 {
 public:
     HWTV() = default;
-    ~HWTV() {
+    ~HWTV() override {
         std::cout << "HWTV Bye" << std::endl;
     };
     void productName() override{
@@ -89,7 +91,7 @@ class MITV :public AbstractTVProduct
 {
 public:
     MITV() = default;
-    ~MITV() {
+    ~MITV() override {
         std::cout << "MITV Bye" << std::endl;
     };
     void productName() override{
@@ -105,20 +107,22 @@ public:
 class AbstractFactory
 {
 public:
-    ~AbstractFactory() = default;
+    virtual ~AbstractFactory() = default;
     virtual AbstractPhoneProduct * createPhone() = 0;
     virtual AbstractTVProduct * createTV() = 0;
 protected:
     AbstractFactory() = default;
 };
 
-///三个具体工厂类
+///两个具体工厂类
 ///具体工厂类  生产多个产品
 class HWFactory : public AbstractFactory
 {
 public:
     HWFactory() = default;
-    ~HWFactory() = default;
+    ~HWFactory() override {
+        std::cout << "HWFactory Bye" << std::endl;
+    };
     AbstractPhoneProduct *createPhone() override{
         return  new HWPhone();
     }
@@ -132,7 +136,9 @@ class MIFactory : public AbstractFactory
 {
 public:
     MIFactory() = default;
-    ~MIFactory() = default;
+    ~MIFactory() override {
+        std::cout << "MIFactory Bye" << std::endl;
+    };
     AbstractPhoneProduct *createPhone() override{
         return  new MIPhone();
     }
