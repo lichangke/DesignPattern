@@ -15,19 +15,11 @@ int main() {
     tv = factory->createTV();
     tv->productIntroduction();
 
-    delete factory;
-    delete phone;
-    delete tv;
-
     factory = new MIFactory();
     phone = factory->createPhone();
     phone->productName();
     tv = factory->createTV();
     tv->productIntroduction();
-
-    delete factory;
-    delete phone;
-    delete tv;
 
     getchar();
     return 0;

@@ -68,7 +68,7 @@ protected:
 };
 
 ///2个具体产品类
-///具体产品类 HWPhone
+///具体产品类 HWTV
 class HWTV :public AbstractTVProduct
 {
 public:
@@ -84,7 +84,7 @@ public:
     }
 };
 
-///具体产品类 MIPhone
+///具体产品类 MITV
 class MITV :public AbstractTVProduct
 {
 public:
@@ -113,7 +113,7 @@ protected:
 };
 
 ///三个具体工厂类
-///具体工厂类  只生产单一产品
+///具体工厂类  生产多个产品
 class HWFactory : public AbstractFactory
 {
 public:
@@ -127,7 +127,7 @@ public:
     }
 };
 
-///具体工厂类  只生产单一产品
+///具体工厂类  生产多个产品
 class MIFactory : public AbstractFactory
 {
 public:
