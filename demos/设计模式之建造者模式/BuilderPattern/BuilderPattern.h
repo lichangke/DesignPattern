@@ -6,6 +6,7 @@
 #define BUILDERPATTERN_BUILDERPATTERN_H
 
 #include <iostream>
+#include <assert.h>
 
 /// 产品角色（Product）
 class ProductMeal {
@@ -149,13 +150,14 @@ public:
     }
     //封装组装流程，返回建造结果
     ProductMeal *construct(){
+        assert(builder!= nullptr);
         builder->buildBurger(); /// 制作顺序
         builder->buildDrink();
         builder->buildSnacks();
         return builder->getMeal();
     }
 private:
-    AbstractBuilder *builder{};
+    AbstractBuilder *builder= nullptr;
 };
 
 #endif //BUILDERPATTERN_BUILDERPATTERN_H
