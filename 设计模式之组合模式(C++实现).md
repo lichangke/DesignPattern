@@ -59,11 +59,15 @@
 
 ![设计模式之组合模式_透明组合模式](\upload\设计模式之组合模式\设计模式之组合模式_透明组合模式.jpg)
 
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20201230213250282.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xlYWNvY2sxOTkx,size_16,color_FFFFFF,t_70)
+
 ## 安全组合模式
 
 安全组合模式中，抽象构件类包含叶子构件行为和容器构件行为的**交集**，在抽象构件Component中没有声明任何用于管理成员对象的方法，而是在Composite类中声明并实现这些方法。这种做法是安全的，因为根本不向叶子对象提供这些管理成员对象的方法，对于叶子对象，客户端不可能调用到这些方法。
 
 ![设计模式之组合模式_安全组合模式](\upload\设计模式之组合模式\设计模式之组合模式_安全组合模式.jpg)
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20201230213300560.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xlYWNvY2sxOTkx,size_16,color_FFFFFF,t_70)
 
 # 代码示例
 
@@ -274,6 +278,8 @@ int main() {
 
 ![image-20201230171053902](\upload\设计模式之组合模式\A_设计模式之组合模式.png)
 
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20201230213319733.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xlYWNvY2sxOTkx,size_16,color_FFFFFF,t_70)
+
 
 
 ## 安全组合模式
@@ -447,6 +453,8 @@ int main() {
 ### 输出
 
 ![image-20201230171328600](\upload\设计模式之组合模式\B_设计模式之组合模式.png)
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20201230213337169.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xlYWNvY2sxOTkx,size_16,color_FFFFFF,t_70)
 
 *个人能力有限，如有错误之处或者其他建议，敬请告知欢迎探讨，谢谢!*
 
