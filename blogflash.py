@@ -43,15 +43,18 @@ url_list = [
 # url_1 = getUrls("https://blog.csdn.net/leacock1991")  # 首页
 
 if __name__ == '__main__':
-
+    links = set()
     for url in url_list:
-        print("========",url,"=============");
         urls = getUrls(url)
         for link in urls:
-            if -1 != link.find("https://blog.csdn.net/leacock1991/article/details/"):
+            if 0 == link.find("https://blog.csdn.net/leacock1991/article/details/"):
                 if -1 != link.find("#comments"):
                     continue
-                requests.request("GET", link, data=payload, headers=headers)
-                print(link, "Ok")
-                time.sleep(2)
-    time.sleep(60)
+                links.add(link)
+
+    for i in range(5):
+        for link in links:
+            requests.request("GET", link, data=payload, headers=headers)
+            print(link, "Ok")
+            time.sleep(2)
+        time.sleep(60*60)
