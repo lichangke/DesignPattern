@@ -62,8 +62,10 @@ if __name__ == '__main__':
                 links.add(link)
 
     for i in range(5):
+        print("============start=============")
         for link in links:
             requests.request("GET", link, data=payload, headers=headers)
             print(link, "Ok")
-            time.sleep(2)
+            time.sleep(4)
+        print("============end=============")
         time.sleep(60*60)
