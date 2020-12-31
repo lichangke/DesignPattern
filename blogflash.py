@@ -30,15 +30,15 @@ def getUrls(url):
 
 # 这里替换成你要刷访问量博客的首页
 url_list = [
-            "https://blog.csdn.net/leacock1991/article/details/111713017",
-            "https://blog.csdn.net/leacock1991/article/details/107738817",
-            "https://blog.csdn.net/leacock1991/article/details/107650096",
-            "https://blog.csdn.net/leacock1991/article/details/104665452",
-            "https://blog.csdn.net/leacock1991/article/details/101467248",
-            "https://blog.csdn.net/leacock1991/article/details/101467244",
-            "https://blog.csdn.net/leacock1991/article/details/101467212",
-            "https://blog.csdn.net/leacock1991/article/details/101467221",
-            "https://blog.csdn.net/leacock1991"
+            "https://blog.csdn.net/leacock1991/article/details/111713017",  #   设计模式之模式概述(模式汇总)(C++实现)
+            "https://blog.csdn.net/leacock1991/article/details/107738817",  #   《MySQL必知必会》学习笔记 目录
+            "https://blog.csdn.net/leacock1991/article/details/107650096",  #   一步一步学linux操作系统 目录
+            "https://blog.csdn.net/leacock1991/article/details/104665452",  #   【剑指offer-2】题目目录【C++版本】
+            "https://blog.csdn.net/leacock1991/article/details/101467248",  #   网络协议笔记 目录
+            "https://blog.csdn.net/leacock1991/article/details/101467244",  #   Python 项目实践目录
+            "https://blog.csdn.net/leacock1991/article/details/101467212",  #   Python基础进阶学习目录
+            "https://blog.csdn.net/leacock1991/article/details/101467221",  #   SQL必知必会笔记目录
+            "https://blog.csdn.net/leacock1991" # 首页
             ]
 # url_1 = getUrls("https://blog.csdn.net/leacock1991")  # 首页
 
