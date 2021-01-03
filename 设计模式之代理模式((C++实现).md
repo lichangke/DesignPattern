@@ -56,21 +56,138 @@
 
 # 模式结构
 
-- **抽象主题角色（Subject）**：声明了真实主题和代理主题的共同接口，这样一来在任何使用真实主题的地方都可以使用代理主题，客户端通常需要针对抽象主题角色进行编程。
-- **代理主题角色（Proxy）**：代理主题角色通过关联关系引用真实主题角色，因此可以控制和操纵真实主题对象；代理主题角色中提供一个与真实主题角色相同的接口（以在需要时代替真实主题角色），同时还可以在调用对真实主题对象的操作之前或之后增加新的服务和功能；
-- **真实主题角色（RealSubject）**：定义了代理角色所代表的真实对象，在真实主题角色中实现了真实的业务操作，客户端可以通过代理主题角色间接调用真实主题角色中定义的操作。
+- **Subject（抽象主题角色）**：声明了真实主题和代理主题的共同接口，这样一来在任何使用真实主题的地方都可以使用代理主题，客户端通常需要针对抽象主题角色进行编程。
+- **Proxy（代理主题角色）**：代理主题角色通过关联关系引用真实主题角色，因此可以控制和操纵真实主题对象；代理主题角色中提供一个与真实主题角色相同的接口（以在需要时代替真实主题角色），同时还可以在调用对真实主题对象的操作之前或之后增加新的服务和功能；
+- **RealSubject（真实主题角色）**：定义了代理角色所代表的真实对象，在真实主题角色中实现了真实的业务操作，客户端可以通过代理主题角色间接调用真实主题角色中定义的操作。
 
-
+![设计模式之代理模式](\upload\设计模式之代理模式\设计模式之代理模式.jpg)
 
 
 
 # 代码示例
 
+模拟在业务代码中添加日志功能
+
+Subject（抽象主题角色）： Subject
+
+Proxy（代理主题角色）：ProxySubject
+
+RealSubject（真实主题角色）： RealSubject
+
+附加功能： Log
+
+
+
 ## GitHub
+
+[ProxyPattern](https://github.com/lichangke/DesignPattern/tree/main/demos/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/ProxyPattern)
+
+## Subject（抽象主题角色）
+
+```cpp
+/// Subject（抽象主题角色）： Subject
+class Subject {
+public:
+    virtual ~Subject() = default;
+    virtual void business() = 0;
+protected:
+    Subject() = default;
+};
+```
+
+## RealSubject（真实主题角色）
+
+```cpp
+/// RealSubject（真实主题角色）： RealSubject
+class RealSubject : public Subject {
+public:
+    RealSubject (){
+        std::cout << "RealSubject Hello" << std::endl;
+    }
+    ~RealSubject () override{
+        std::cout << "RealSubject Bye" << std::endl;
+    }
+    void business() override{
+        std::cout << "business 业务代码在此执行" << std::endl;
+    }
+
+};
+```
+
+## 附加功能： Log
+
+```cpp
+/// 附加功能： Log
+class Log {
+public:
+    Log () {
+        std::cout << "Log Hello" << std::endl;
+    }
+    ~Log () {
+        std::cout << "Log Bye" << std::endl;
+    }
+    std::string addTimeLog() {
+        time_t t = time(nullptr);
+        char timeLog[64] = {0};
+        std::strftime(timeLog, 63, "%Y-%m-%d %H:%M:%S",localtime(&t));
+        return std::string(timeLog);
+    }
+
+};
+```
+
+## Proxy（代理主题角色）
+
+```cpp
+/// Proxy（代理主题角色）：ProxySubject
+class ProxySubject : public Subject {
+public:
+    ProxySubject (){
+        std::cout << "ProxySubject Hello" << std::endl;
+        realSubject = new RealSubject();
+        log = new Log();
+    }
+    ~ProxySubject () override{
+        std::cout << "ProxySubject Bye" << std::endl;
+        delete realSubject;
+        delete log;
+    }
+    void preBusiness() {
+        std::cout << "preBusiness 被调用，时间为：" << log->addTimeLog() << std::endl;
+    }
+    void business() override {
+        preBusiness();
+        realSubject->business();
+        std::cout << "输入任意键继续："  << std::endl;
+        getchar();
+        afterBusiness();
+    }
+    void afterBusiness() {
+        std::cout << "afterBusiness 被调用，时间为：" << log->addTimeLog() << std::endl;
+    }
+private:
+    RealSubject *realSubject;
+    Log *log;
+};
+```
 
 ## 测试
 
+```cpp
+int main() {
+    Subject *subject;
+    subject = new ProxySubject();
+    subject->business();
+    delete subject;
+    return 0;
+}
+```
+
 ## 输出
+
+![image-20210103212017020](\upload\设计模式之代理模式\A_设计模式之代理模式.png)
+
+
 
 # 说明
 
