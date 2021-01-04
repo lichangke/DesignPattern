@@ -14,7 +14,7 @@
 
 ## 实现概述：
 
-职责链模式(核心在于引入了一个抽象处理者。通常每个处理者都包含对另一个处理者的引用。如果一个对象不能处理该请求，那么它会把相同的请求传给下一个接收者，依此类推。
+职责链模式核心在于引入了一个抽象处理者。通常每个处理者都包含对另一个处理者的引用。如果一个对象不能处理该请求，那么它会把相同的请求传给下一个接收者，依此类推。
 
 ## 应用场景：
 
@@ -55,7 +55,7 @@ java中Servlet Filter和Spring Interceptor
 
 # 代码示例
 
-模拟不同金额票据需要不同级别的领导审批 ，金额0~10万含：Teamleader可处理，金额10~20万含：Supervisor可处理，金额20~50万含：Manager可处理，金额50~100万含：Boss可处理，金额超过100万，无人处理，模拟缺点：请求没有一个明确的接收者，就不能保证它一定会被处理。
+模拟不同金额票据需要不同级别的领导审批 ，金额0 ~ 10万含：Teamleader可处理，金额10 ~ 20万含：Supervisor可处理，金额20 ~ 50万含：Manager可处理，金额50 ~ 100万含：Boss可处理，金额超过100万，无人处理，模拟缺点：请求没有一个明确的接收者，就不能保证它一定会被处理。
 
 Handler（抽象处理者）：AbstractHandler
 
@@ -67,15 +67,243 @@ ConcreteHandler（具体处理者）：Teamleader、Supervisor、Manager、Boss
 
 ## GitHub
 
+[ChainOfResponsibility](https://github.com/lichangke/DesignPattern/tree/main/demos/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%81%8C%E8%B4%A3%E9%93%BE%E6%A8%A1%E5%BC%8F/ChainOfResponsibility)
 
+## 请求：Bill
+
+```cpp
+/// 请求：Bill
+class Bill {
+
+public:
+    Bill(int id, const std::string &name, double account){
+        this->id = id;
+        this->name = name;
+        this->amount = account;
+        std::cout << "Bill Hello," << "id = " << this->id
+        << " name = " << this->name << " amount = " << this->amount  << std::endl;
+    }
+    ~Bill() {
+        std::cout << "Bill Bye," << "id = " << this->id
+                  << " name = " << this->name << " amount = " << this->amount  << std::endl;
+    }
+    double getAccount(){
+        return amount;
+    }
+    void showBill(){
+        std::cout << "Bill id = " << id << ", Bill name = " << name << ", Bill amount = " << amount  << std::endl;
+    }
+private:
+    int id;
+    std::string name;
+    double amount;
+
+};
+```
+
+## Handler（抽象处理者）
+
+```cpp
+/// Handler（抽象处理者）：AbstractHandler
+class AbstractHandler {
+public:
+
+    explicit AbstractHandler(const std::string &name){
+        setName(name);
+        nextHandler = nullptr;
+    }
+
+    virtual ~AbstractHandler() = default;
+
+    // 添加上级,职责链上的下一个处理者
+    void setNextHandler(AbstractHandler *next) {
+        nextHandler = next;
+    }
+    // 处理请求
+    virtual void handleRequest(Bill* bill) = 0;
+
+    std::string getName(){
+        return name;
+    }
+
+protected:
+    AbstractHandler *nextHandler;
+private:
+    void setName(const std::string &iName){
+        this->name = iName;
+    }
+    std::string name;
+};
+```
+
+## ConcreteHandler（具体处理者）
+
+```cpp
+/// ConcreteHandler（具体处理者）：TeamLeader、Supervisor、Manager、Boss
+class TeamLeader : public AbstractHandler {
+
+public:
+    explicit TeamLeader(const std::string &name) : AbstractHandler(name) {
+        std::cout << "TeamLeader Hello, " << name << std::endl;
+    }
+    ~TeamLeader() override {
+        std::cout << "TeamLeader Bye, " << getName() << std::endl;
+    }
+
+    // 处理请求
+    void handleRequest(Bill *bill) override{
+        if (bill->getAccount() <= 10){
+            std::cout << "TeamLeader " << getName() <<"处理了该票据，票据信息如下：" << std::endl;
+            bill->showBill();
+        } else {
+            std::cout << "TeamLeader " << getName() <<" 无权处理，转交上级" << std::endl;
+            if(nullptr == nextHandler) {
+                std::cout << "票据无人处理，票据信息如下：" << std::endl;
+                bill->showBill();
+            }
+            else {
+                nextHandler->handleRequest(bill);
+            }
+        }
+    }
+};
+
+class Supervisor : public AbstractHandler {
+
+public:
+    explicit Supervisor(const std::string &name) : AbstractHandler(name) {
+        std::cout << "Supervisor Hello, " << name << std::endl;
+    }
+    ~Supervisor() override {
+        std::cout << "Supervisor Bye, " << getName() << std::endl;
+    }
+
+    // 处理请求
+    void handleRequest(Bill *bill) override{
+        if ( 10 < bill->getAccount() && bill->getAccount() <= 20){
+            std::cout << "Supervisor " << getName() <<"处理了该票据，票据信息如下：" << std::endl;
+            bill->showBill();
+        } else {
+            std::cout << "Supervisor " << getName() <<" 无权处理，转交上级" << std::endl;
+            if(nullptr == nextHandler) {
+                std::cout << "票据无人处理，票据信息如下：" << std::endl;
+                bill->showBill();
+            }
+            else {
+                nextHandler->handleRequest(bill);
+            }
+        }
+    }
+};
+
+class Manager : public AbstractHandler {
+
+public:
+    explicit Manager(const std::string &name) : AbstractHandler(name) {
+        std::cout << "Manager Hello, " << name << std::endl;
+    }
+    ~Manager() override {
+        std::cout << "Manager Bye, " << getName() << std::endl;
+    }
+
+    // 处理请求
+    void handleRequest(Bill *bill) override{
+        if ( 20 < bill->getAccount() &&  bill->getAccount() <= 50){
+            std::cout << "Manager " << getName() <<"处理了该票据，票据信息如下：" << std::endl;
+            bill->showBill();
+        } else {
+            std::cout << "Manager " << getName() <<" 无权处理，转交上级" << std::endl;
+            if(nullptr == nextHandler) {
+                std::cout << "票据无人处理，票据信息如下：" << std::endl;
+                bill->showBill();
+            }
+            else {
+                nextHandler->handleRequest(bill);
+            }
+        }
+    }
+};
+
+class Boss : public AbstractHandler {
+
+public:
+    explicit Boss(const std::string &name) : AbstractHandler(name) {
+        std::cout << "Boss Hello, " << name << std::endl;
+    }
+    ~Boss() override {
+        std::cout << "Boss Bye, " << getName() << std::endl;
+    }
+
+    // 处理请求
+    void handleRequest(Bill *bill) override{
+        if ( 50 < bill->getAccount() && bill->getAccount() <= 100 ){
+            std::cout << "Boss " << getName()  <<"处理了该票据，票据信息如下：" << std::endl;
+            bill->showBill();
+        } else {
+            std::cout << "Boss " << getName() <<" 条件不满足，无法处理" << std::endl;
+            if(nullptr == nextHandler) {
+                std::cout << "票据无人处理，票据信息如下：" << std::endl;
+                bill->showBill();
+            }
+            else {
+                nextHandler->handleRequest(bill);
+            }
+        }
+    }
+};
+```
 
 ## 测试
+
+```cpp
+int main() {
+    // 请求处理者：张三， 李四， 王五， 赵六
+    AbstractHandler *level1, *level2, *level3, *level4;
+
+    level1 = new TeamLeader("张三");
+    level2 = new Supervisor("李四");
+    level3 = new Manager("王五");
+    level4 = new Boss("赵六");
+    std::cout << "=============== " << std::endl;
+
+    /// 建立职责链的工作是在客户端进行
+    level1->setNextHandler(level2);
+    level2->setNextHandler(level3);
+    level3->setNextHandler(level4);
+
+    // 创建单据
+    Bill *bill1 = new Bill(1, "Bill_1", 8);
+    Bill *bill2 = new Bill(2, "Bill_2", 15);
+    Bill *bill3 = new Bill(3, "Bill_3", 99);
+    Bill *bill4 = new Bill(4, "Bill_4", 44);
+    Bill *bill5 = new Bill(5, "Bill_5", 150);
+    std::cout << "=============== " << std::endl;
+    // 全部先交给 level1 TeamLeader 审批
+    level1->handleRequest(bill1);
+    std::cout << "=============== " << std::endl;
+    level1->handleRequest(bill2);
+    std::cout << "=============== " << std::endl;
+    level1->handleRequest(bill3);
+    std::cout << "=============== " << std::endl;
+    level1->handleRequest(bill4);
+    std::cout << "=============== " << std::endl;
+    level1->handleRequest(bill5);
+    std::cout << "=============== " << std::endl;
+
+
+    delete level1;delete level2;delete level3;delete level4;
+    delete bill1;delete bill2;delete bill3;delete bill4;delete bill5;
+
+    return 0;
+
+}
+```
 
 
 
 ## 输出
 
-
+![image-20210104213301198](\upload\设计模式之职责链模式\A_设计模式之职责链模式.png)
 
 
 
