@@ -89,13 +89,305 @@ Receiver（接收者）： Lamp 、 Fan
 
 ## GitHub
 
-
-
-## 测试
+[CommandPattern](https://github.com/lichangke/DesignPattern/tree/main/demos/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/CommandPattern)
 
 
 
-## 输出
+## Command（抽象命令类）
+
+
+
+```cpp
+/// Command（抽象命令类）： Command
+
+class Command {
+public:
+    virtual ~Command() = default;
+    // 声明抽象接口：执行命令
+    virtual void execute() = 0;
+protected:
+    Command() = default;
+};
+```
+
+## Receiver（接收者）
+
+```cpp
+/// Receiver（接收者）： Lamp 、 Fan
+class Lamp {
+public:
+    Lamp() {
+        lampState = false;
+        std::cout << "Lamp Hello" << std::endl;
+    }
+    ~Lamp() {
+        std::cout << "Lamp Bye" << std::endl;
+    }
+
+    void lampOn() {
+        lampState = true;
+        std::cout << "Lamp On" << std::endl;
+    }
+    void lampOff() {
+        lampState = false;
+        std::cout << "Lamp Off" << std::endl;
+    }
+
+    bool getLampState(){
+        return lampState;
+    }
+private:
+    bool lampState;
+};
+
+class Fan {
+public:
+    Fan() {
+        fanState = false;
+        std::cout << "Fan Hello" << std::endl;
+    }
+    ~Fan() {
+        std::cout << "Fan Bye" << std::endl;
+    }
+
+    void fanOn() {
+        fanState = true;
+        std::cout << "Fan On" << std::endl;
+    }
+    void fanOff() {
+        fanState = false;
+        std::cout << "Fan Off" << std::endl;
+    }
+
+    bool getFanState(){
+        return fanState;
+    }
+private:
+    bool fanState;
+};
+```
+
+## ConcreteCommand（具体命令类）
+
+```cpp
+/// ConcreteCommand（具体命令类）：  LampCommand 、 FanCommand
+class LampCommand : public Command {
+public:
+    LampCommand() {
+        std::cout << "LampCommand Hello" << std::endl;
+        lamp = new Lamp();
+    }
+    ~LampCommand() override {
+        std::cout << "LampCommand Bye" << std::endl;
+        delete lamp;
+    }
+
+    void execute() override{
+        if(lamp->getLampState()) { // true
+            lamp->lampOff(); // false
+        } else {
+            lamp->lampOn();
+        }
+    }
+
+private:
+    Lamp *lamp;
+};
+
+class FanCommand : public Command {
+public:
+    FanCommand() {
+        std::cout << "FanCommand Hello" << std::endl;
+        fan = new Fan();
+    }
+    ~FanCommand() override {
+        std::cout << "FanCommand Bye" << std::endl;
+        delete fan;
+    }
+
+    void execute() override{
+        if(fan->getFanState()) { // true
+            fan->fanOff(); // false
+        } else {
+            fan->fanOn();
+        }
+    }
+
+private:
+    Fan *fan;
+};
+```
+
+## Invoker（调用者）
+
+```cpp
+/// Invoker（调用者）：Switch
+class Switch {
+public:
+    Switch() {
+        std::cout << "Switch Hello" << std::endl;
+        command = nullptr;
+    }
+    ~Switch() {
+        std::cout << "Switch Bye" << std::endl;
+        delete command;
+    }
+    // 设值注入具体命令类对象
+    void setCommand(Command *cmd){
+        delete command;// 删除之前命令
+        command = cmd;
+    }
+    // 发送命令：切换开关
+    void touch(){
+        std::cout << "切换开关:" << std::endl;
+        command->execute();
+    }
+private:
+    Command *command;
+};
+```
+
+##  CommandVector 命令集合
+
+```cpp
+/// CommandVector 命令集合 示例
+class CommandVector {
+public:
+    CommandVector() {
+        std::cout << "CommandVector Hello" << std::endl;
+    }
+    ~CommandVector() {
+        std::cout << "CommandVector Bye" << std::endl;
+        for(auto command : commandVector) {
+            delete command;
+        }
+    }
+
+    void addCommand(Command *cmd) {
+        commandVector.push_back(cmd);
+    }
+
+    void execute() { // 直接调用 commandVector 中元素 的 execute
+        for(auto command : commandVector) {
+            command->execute();
+        }
+    }
+private:
+    std::vector<Command *> commandVector;
+};
+```
+
+## Invoker（调用者）命令集合
+
+```cpp
+/// Invoker（调用者）：SwitchVector 处理 CommandVector 命令集合
+class SwitchVector {
+public:
+    SwitchVector() {
+        std::cout << "SwitchVector Hello" << std::endl;
+        commandVector = nullptr;
+    }
+    ~SwitchVector() {
+        std::cout << "SwitchVector Bye" << std::endl;
+        delete commandVector;
+    }
+    // 设值注入具体命令类对象
+    void setCommandVector(CommandVector *vector){
+        commandVector = vector;
+    }
+    // 发送命令：切换开关
+    void touch(){
+        if(nullptr!=commandVector) {
+            std::cout << "切换开关:" << std::endl;
+            commandVector->execute();
+        } else {
+            std::cout << "commandVector 为空" << std::endl;
+        }
+
+    }
+private:
+    CommandVector *commandVector;
+};
+```
+
+
+
+## 单命令
+
+### 测试
+
+```cpp
+int main() {
+
+    // 实例化调用者：开关 (调用者)
+    auto *pSwitch = new Switch();
+    // (具体命令) ， Switch 中 函数 setCommand和析构 会处理 命令 Command
+    Command *lampCmd, *fanCmd;
+
+    std::cout << "====Lamp Test====" << std::endl;
+    // 按钮 控制 电灯 Lamp
+    lampCmd = new LampCommand(); // 具体命令
+    pSwitch->setCommand(lampCmd);
+    pSwitch->touch(); // 开
+    pSwitch->touch(); // 关
+    pSwitch->touch(); // 开
+
+    std::cout << "====Fan Test====" << std::endl;
+    // 按钮控制风扇
+    fanCmd = new FanCommand();
+    pSwitch->setCommand(fanCmd);
+    pSwitch->touch(); // 开
+    pSwitch->touch(); // 关
+    pSwitch->touch(); // 开
+    std::cout << "==============" << std::endl;
+    delete pSwitch;
+    return 0;
+}
+```
+
+### 输出
+
+![image-20210105223414372](\upload\设计模式之命令模式\A_设计模式之命令模式.png)
+
+
+
+## 命令组合
+
+### 测试
+
+```cpp
+int main() {
+
+    // 实例化调用者：开关 (调用者)
+    auto *pSwitchVector = new SwitchVector();
+    // (具体命令) ， pSwitchVector 中 析构 会处理 commandVector
+    Command *lampCmd, *fanCmd;
+    //  命令集合
+    auto *commandVector = new CommandVector();
+
+    std::cout << "====CommandVector Test====" << std::endl;
+    // 按钮 控制 电灯 Lamp
+    lampCmd = new LampCommand(); // 具体命令
+    commandVector->addCommand(lampCmd);
+    // 按钮控制风扇
+    fanCmd = new FanCommand();
+    commandVector->addCommand(fanCmd);
+
+    pSwitchVector->setCommandVector(commandVector);
+
+    pSwitchVector->touch(); // 开
+    pSwitchVector->touch(); // 关
+    pSwitchVector->touch(); // 开
+
+    delete pSwitchVector;
+
+    return 0;
+}
+```
+
+### 输出
+
+![image-20210105223612450](\upload\设计模式之命令模式\B_设计模式之命令模式.png)
 
 
 
