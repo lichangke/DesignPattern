@@ -95,7 +95,7 @@ private:
 };
 
 
-// Caretaker（负责人）:  ChessCaretaker
+/// Caretaker（负责人）:  ChessCaretaker
 class ChessCaretaker {
 public:
     ChessCaretaker() {
@@ -132,7 +132,7 @@ public:
     }
 
 private:
-    static void releaseStack(std::stack<ChessMemento *> stack) {
+    static void releaseStack(std::stack<ChessMemento *> &stack) {
         while (!stack.empty())
         {
             delete stack.top();
