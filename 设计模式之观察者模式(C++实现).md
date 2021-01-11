@@ -77,7 +77,7 @@ ConcreteObserver（具体观察者）： ObserverBlog
 
 ## GitHub
 
-
+[ObserverPattern](https://github.com/lichangke/DesignPattern/tree/main/demos/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/ObserverPattern)
 
 ## Subject（目标）
 
