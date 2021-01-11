@@ -122,7 +122,7 @@ ConcreteState（具体状态类）：  NormalState 、DoubleState、QuadrupleSta
 
 ## GitHub
 
-
+[StatePattern](https://github.com/lichangke/DesignPattern/tree/main/demos/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F/StatePattern)
 
 
 
