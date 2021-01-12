@@ -161,8 +161,8 @@ public:
         elementList.push_back(element);
     }
     void accept(Visitor* visitor){
-        for (auto & i : elementList){
-            i->accept(visitor);
+        for (auto & element : elementList){
+            element->accept(visitor);
         }
     }
 private:
