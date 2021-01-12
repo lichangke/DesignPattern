@@ -22,7 +22,7 @@
 
 ## 要点：
 
-双重分派机制的采用，这可参见 XXXX
+双重分派机制的采用
 
 ## 应用场景：
 
@@ -72,15 +72,247 @@ ObjectStructure（对象结构）：ShoppingCart(类中有Element的容器存储
 
 ## GitHub
 
+[VisitorPattern](https://github.com/lichangke/DesignPattern/tree/main/demos/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F/VisitorPattern)
+
+## Visitor（抽象访问者）
+
+```cpp
+/// Visitor（抽象访问者）： Visitor
+class Visitor {
+public:
+    virtual ~Visitor() = default;
+    // 声明一组访问方法
+    virtual void visit(Apple* apple) = 0;
+    virtual void visit(Pork* pork) = 0;
+
+protected:
+    Visitor()= default;
+};
+```
+
+
+
+## ConcreteVisitor（具体访问者）
+
+```cpp
+/// ConcreteVisitor（具体访问者）： Customer 、 Cashier
+// 具体访问者：顾客
+class Customer :public Visitor
+{
+public:
+    explicit Customer(const std::string &iName) {
+        name = iName;
+        std::cout << "Customer Hello,name = " << name << std::endl;
+    }
+    ~Customer() override {
+        std::cout << "Customer Bye,name = " << name << std::endl;
+    };
+    void setNum(Apple*apple , int num) {
+        apple->setNum(num);
+    }
+    void setNum(Pork* pork, int num) {
+        pork->setNum(num);
+    }
+    void visit(Apple* apple) override {
+        std::cout << apple->getName() << "\t 单价: " << apple->getPrice() << "元/kg" << std::endl;
+    }
+    void visit(Pork* pork) override {
+        std::cout << pork->getName() << "\t 单价: " << pork->getPrice() << "元/kg" << std::endl;
+    }
+private:
+    std::string name;
+};
+
+class Cashier :public Visitor
+{
+public:
+    Cashier() {
+        std::cout << "Cashier Hello" << std::endl;
+    }
+    ~Cashier() override {
+        std::cout << "Cashier Bye" << std::endl;
+    };
+
+    void visit(Apple* apple) override{
+        std::string name = apple->getName();
+        int price = apple->getPrice();
+        int num = apple->getNum();
+        int total = price*num;
+        std::cout << name << "\t 总价: " << total << "元" << std::endl;
+    }
+
+    void visit(Pork* pork) override{
+        std::string name = pork->getName();
+        int price = pork->getPrice();
+        int num = pork->getNum();
+        int total = price*num;
+        std::cout << name << "\t 总价: " << total << "元" << std::endl;
+    }
+};
+```
+
+
+
+## Element（抽象元素）
+
+```cpp
+/// Element（抽象元素）： Element
+class Element {
+public:
+    virtual ~Element() = default;
+    virtual void accept(Visitor* visitor) = 0;
+
+    int getPrice(){
+        return price;
+    }
+
+    int getNum(){
+        return num;
+    }
+
+    std::string getName(){
+        return name;
+    }
+
+    void setPrice(int iPrice){
+        price = iPrice;
+    }
+    void setNum(int iNum){
+        num = iNum;
+    }
+    void setName(const std::string &iName){
+        name = iName;
+    }
+
+protected:
+    Element() {
+        price = 0;
+        num = 0;
+    }
+    int price;
+    int num;
+    std::string name;
+};
+```
+
+
+
+## ConcreteElement（具体元素）
+
+```cpp
+/// ConcreteElement（具体元素）： Pork  、 Apple
+// 具体元素：Apple
+class Apple :public Element {
+public:
+    Apple(const std::string &name, int price) {
+        setPrice(price);
+        setNum(0);
+        setName(name);
+        std::cout << "Apple Hello,name = " << name << std::endl;
+    }
+    ~Apple() override {
+        std::cout << "Apple Bye,name = " << name << std::endl;
+    }
+    void accept(Visitor*) override;
+};
+// 具体元素：Apple
+class Pork :public Element {
+public:
+    Pork(const std::string &name, int price) {
+        setPrice(price);
+        setNum(0);
+        setName(name);
+        std::cout << "Pork Hello,name = " << name << std::endl;
+    }
+    ~Pork() override {
+        std::cout << "Pork Bye,name = " << name << std::endl;
+    }
+    void accept(Visitor*) override;
+};
+
+/// 放在 Visitor 类后
+void Apple::accept(Visitor* visitor) {
+    visitor->visit(this);
+}
+void Pork::accept(Visitor* visitor) {
+    visitor->visit(this);
+}
+```
+
+
+
+## ObjectStructure（对象结构）
+
+```cpp
+/// ObjectStructure（对象结构）：ShoppingCart(类中有Element的容器存储具体ConcreteElement， Pork  和 Apple )
+class ShoppingCart
+{
+public:
+    ShoppingCart(){
+        std::cout << "ShoppingCart Hello" << std::endl;
+    }
+    ~ShoppingCart(){
+        std::cout << "ShoppingCart Bye" << std::endl;
+    }
+
+    void addElement(Element* element){
+        std::cout <<"商品：" << element->getName() << "\t 数量： " << element->getNum() << " \t 加入购物车！" << std::endl;
+        elementList.push_back(element);
+    }
+    void accept(Visitor* visitor){
+        for (auto & element : elementList){
+            element->accept(visitor);
+        }
+    }
+private:
+    std::vector<Element*>elementList;
+};
+```
+
 
 
 ## 测试
+
+```cpp
+int main() {
+
+    Apple *apple1 = new Apple("红富士苹果", 7);
+    Apple *apple2 = new Apple("烟台苹果", 5);
+    Pork *pork1 = new Pork("里脊肉", 45);
+    Pork *pork2 = new Pork("五花肉", 28);
+
+    auto* cashier = new Cashier();
+    auto* customer = new Customer("张三");
+    customer->setNum(apple1, 3);
+    customer->setNum(apple2, 4);
+    customer->setNum(pork1, 1);
+    customer->setNum(pork2, 2);
+
+    auto* shoppingCart = new ShoppingCart();
+    std::cout << "===购物车添加商品===" << std::endl;
+    shoppingCart->addElement(apple1);
+    shoppingCart->addElement(apple2);
+    shoppingCart->addElement(pork1);
+    shoppingCart->addElement(pork2);
+    std::cout << "===顾客选择的商品===" << std::endl;
+    shoppingCart->accept(customer);
+    std::cout << "===收银员计算的价格===" << std::endl;
+    shoppingCart->accept(cashier);
+    std::cout << "========" << std::endl;
+
+    delete apple1;delete apple2;
+    delete pork1;delete pork2;
+    delete cashier;delete customer;
+    delete shoppingCart;
+    return 0;
+}
+```
 
 
 
 ## 输出
 
-
+![image-20210112213305578](\upload\设计模式之访问者模式\A_设计模式之访问者模式.png)
 
 *个人能力有限，如有错误之处或者其他建议，敬请告知欢迎探讨，谢谢!*
 
