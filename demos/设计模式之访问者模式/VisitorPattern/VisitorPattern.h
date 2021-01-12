@@ -83,8 +83,8 @@ class Visitor {
 public:
     virtual ~Visitor() = default;
     // 声明一组访问方法
-    virtual void visit(Apple*) = 0;
-    virtual void visit(Pork*) = 0;
+    virtual void visit(Apple* apple) = 0;
+    virtual void visit(Pork* pork) = 0;
 
 protected:
     Visitor()= default;
